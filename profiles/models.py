@@ -3,6 +3,14 @@ from django.contrib.auth.models import User
 
 
 class Profile(models.Model):
+    """
+    Profile model to extend the User model.
+
+    Attributes:
+    - user (OneToOneField): the user to extend
+    - favorite_city (CharField): the favorite city of the user
+    """
+
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     favorite_city = models.CharField(max_length=64, blank=True)
 

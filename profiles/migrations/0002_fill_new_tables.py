@@ -5,7 +5,11 @@ from django.db import migrations
 
 # Fill the new tables with data from the old table
 def fill_new_tables(apps, schema_editor):
-    OcLettingsSiteProfile = apps.get_model('oc_lettings_site', 'Profile')
+    try:
+        OcLettingsSiteProfile = apps.get_model('oc_lettings_site', 'Profile')
+    except LookupError:
+        return
+
     Profile = apps.get_model('profiles', 'Profile')
 
     for old_profile in OcLettingsSiteProfile.objects.all():
