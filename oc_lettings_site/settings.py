@@ -1,7 +1,6 @@
 import os
 import sentry_sdk
 
-from pathlib import Path
 from dotenv import load_dotenv
 from sentry_sdk.integrations.django import DjangoIntegration
 
@@ -9,19 +8,19 @@ from sentry_sdk.integrations.django import DjangoIntegration
 load_dotenv()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.getenv("DEBUG_MODE") == "True")
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -116,11 +115,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
+    os.path.join(BASE_DIR, 'static'),
 ]
 
 
