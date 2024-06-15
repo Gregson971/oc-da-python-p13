@@ -5,6 +5,6 @@ services:
       - .:/django
     ports:
       - 8000:8000
-    image: oc-da-python-p13
+    image: gregson971/oc-da-python-p13
     container_name: oc-da-python-p13_container
     command: python manage.py runserver 0.0.0.0:8000
