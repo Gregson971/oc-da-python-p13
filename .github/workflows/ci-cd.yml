@@ -55,12 +55,16 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Set timestamp for tagging
+        id: vars
+        run: echo "TIMESTAMP=$(date +%s)" >> $GITHUB_ENV
+
       - name: Build and tag Docker image
         run: |
-          docker build -t $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:${{ github.sha }} .
-          docker tag $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:${{ github.sha }} $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:latest
+          docker build -t $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:${{ env.TIMESTAMP }} .
+          docker tag $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:${{ env.TIMESTAMP }} $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:latest
 
       - name: Push Docker image
         run: |
-          docker push $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:${{ github.sha }}
+          docker push $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:${{ env.TIMESTAMP }}
           docker push $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:latest
