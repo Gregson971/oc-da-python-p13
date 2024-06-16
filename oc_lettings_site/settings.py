@@ -23,7 +23,7 @@ DEBUG = bool(os.getenv("DEBUG_MODE") == "True")
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
-    'oc-da-python-p13.purplesea-635385cf.francecentral.azurecontainerapps.io',
+    'oc-da-python-p13.ashypond-9589c157.francecentral.azurecontainerapps.io',
 ]
 
 
@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -118,12 +119,14 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
+# https://stackoverflow.com/questions/65431326/django-app-on-azure-not-getting-static-files
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # Journalisation with Sentry

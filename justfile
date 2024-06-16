@@ -17,3 +17,7 @@ push-image:
 # Build and run the application with Compose
 run:
     docker-compose up
+
+# Generate assets
+assets:
+    python3 manage.py collectstatic --noinput --clear

@@ -9,6 +9,10 @@ env:
   DOCKER_USERNAME: gregson971
   DOCKER_IMAGE_NAME: oc-da-python-p13
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -22,11 +26,28 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Cache pip dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
       - name: Initialize venv / Install dependencies
         run: |
           python -m venv venv
           . venv/bin/activate
           pip install -r requirements.txt
+
+      - name: Generate assets
+        env:
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          DJANGO_SETTINGS_MODULE: oc_lettings_site.settings
+        run: |
+          . venv/bin/activate
+          rm -rf staticfiles
+          python manage.py collectstatic --noinput
 
       - name: Lint code
         run: |
@@ -60,11 +81,36 @@ jobs:
         run: echo "TIMESTAMP=$(date +%s)" >> $GITHUB_ENV
 
       - name: Build and tag Docker image
+        env:
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
         run: |
-          docker build -t $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:${{ env.TIMESTAMP }} .
+          docker build --build-arg DJANGO_SECRET_KEY="${{ secrets.DJANGO_SECRET_KEY }}" -t $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:${{ env.TIMESTAMP }} .
           docker tag $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:${{ env.TIMESTAMP }} $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:latest
 
       - name: Push Docker image
         run: |
           docker push $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:${{ env.TIMESTAMP }}
           docker push $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:latest
+
+  deploy-azure:
+    needs: containerize
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Az CLI login'
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: 'Run Azure CLI commands'
+        run: |
+          az containerapp up \
+            --name $DOCKER_IMAGE_NAME \
+            --resource-group oc-apps \
+            --location francecentral \
+            --environment 'oc-apps' \
+            --image $DOCKER_USERNAME/$DOCKER_IMAGE_NAME:latest \
+            --target-port 8000 \
+            --ingress external \
+            --query properties.configuration.ingress.fqdn
