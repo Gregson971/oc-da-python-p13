@@ -20,7 +20,11 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.getenv("DEBUG_MODE") == "True")
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    'oc-da-python-p13.purplesea-635385cf.francecentral.azurecontainerapps.io',
+]
 
 
 # Application definition
