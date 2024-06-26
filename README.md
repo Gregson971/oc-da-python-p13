@@ -29,11 +29,11 @@ Dans le reste de la documentation sur le développement local, il est supposé q
 #### Cloner le repository
 
 - `cd /path/to/put/project/in`
-- `git clone https://github.com/OpenClassrooms-Student-Center/Python-OC-Lettings-FR.git`
+- `git clone https://github.com/Gregson971/oc-da-python-p13.git`
 
 #### Créer l'environnement virtuel
 
-- `cd /path/to/Python-OC-Lettings-FR`
+- `cd /path/to/oc-da-python-p13`
 - `python -m venv venv`
 - `apt-get install python3-venv` (Si l'étape précédente comporte des erreurs avec un paquet non trouvé sur Ubuntu)
 - Activer l'environnement `source venv/bin/activate`
@@ -45,7 +45,7 @@ Dans le reste de la documentation sur le développement local, il est supposé q
 
 #### Exécuter le site
 
-- `cd /path/to/Python-OC-Lettings-FR`
+- `cd /path/to/oc-da-python-p13`
 - `source venv/bin/activate`
 - `pip install --requirement requirements.txt`
 - `python manage.py runserver`
@@ -54,25 +54,24 @@ Dans le reste de la documentation sur le développement local, il est supposé q
 
 #### Linting
 
-- `cd /path/to/Python-OC-Lettings-FR`
+- `cd /path/to/oc-da-python-p13`
 - `source venv/bin/activate`
 - `flake8`
 
 #### Tests unitaires
 
-- `cd /path/to/Python-OC-Lettings-FR`
+- `cd /path/to/oc-da-python-p13`
 - `source venv/bin/activate`
 - `pytest`
 
 #### Base de données
 
-- `cd /path/to/Python-OC-Lettings-FR`
+- `cd /path/to/oc-da-python-p13`
 - Ouvrir une session shell `sqlite3`
 - Se connecter à la base de données `.open oc-lettings-site.sqlite3`
 - Afficher les tables dans la base de données `.tables`
-- Afficher les colonnes dans le tableau des profils, `pragma table_info(Python-OC-Lettings-FR_profile);`
-- Lancer une requête sur la table des profils, `select user_id, favorite_city from
-Python-OC-Lettings-FR_profile where favorite_city like 'B%';`
+- Afficher les colonnes dans le tableau des profils, `pragma table_info(oc-da-python-p13_profile);`
+- Lancer une requête sur la table des profils, `select user_id, favorite_city from oc-da-python-p13_profile where favorite_city like 'B%';`
 - `.quit` pour quitter
 
 #### Panel d'administration
@@ -140,6 +139,7 @@ Ces variables d'environnement sont utilisées pour configurer l'application Djan
 
 ### Lancement de l'application en local avec Docker Compose après avoir récupéré l'image Docker
 
+- Récupérer l'image Docker en utilisant la commande `docker pull username/repository:tag`.
 - Lancer l'application en utilisant la commande `docker-compose up`.
 - Aller sur `http://localhost:8000` dans un navigateur.
 - Pour arrêter l'application, utiliser `Ctrl+C`.
@@ -163,6 +163,7 @@ Ces variables d'environnement sont utilisées pour configurer l'application Djan
 
 ## Documentation
 
+- Vous trouverez toute la documentation de cette application [ici](https://oc-da-python-p13.readthedocs.io/fr/latest/)
 - [Django](https://docs.djangoproject.com/en/3.2/)
 - [SQLite](https://www.sqlite.org/docs.html)
 - [Python](https://docs.python.org/3/)
